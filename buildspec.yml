@@ -10,6 +10,8 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - echo "Ensuring repository exists..."
+      - aws ecr describe-repositories --repository-names brain-tasks-app --region $AWS_DEFAULT_REGION || aws ecr create-repository --repository-name brain-tasks-app --region $AWS_DEFAULT_REGION
   build:
     commands:
       - echo Build started on `date`
@@ -24,3 +26,4 @@ artifacts:
   files:
     - '**/*'
     - appspec.yml
+
